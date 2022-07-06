@@ -14,16 +14,15 @@ SOURCES += \
     glwidget.cpp \
     main.cpp \
     mainwindow.cpp \
-    utils/CS123SceneLoader.cpp \
-    utils/CS123XmlSceneParser.cpp
+    parser/SceneParser.cpp \
+    parser/ScenefileReader.cpp
 
 HEADERS += \
     glwidget.h \
     mainwindow.h \
-    utils/CS123ISceneParser.h \
-    utils/CS123SceneData.h \
-    utils/CS123SceneLoader.h \
-    utils/CS123XmlSceneParser.h
+    parser/SceneDefinition.h \
+    parser/SceneParser.h \
+    parser/ScenefileReader.h
 
 FORMS += \
     mainwindow.ui
@@ -33,8 +32,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += glm utils
-DEPENDPATH += glm utils
+INCLUDEPATH += glm
+DEPENDPATH += glm
 DEFINES += _USE_MATH_DEFINES
 DEFINES += TIXML_USE_STL
 DEFINES += GLM_SWIZZLE GLM_FORCE_RADIANS

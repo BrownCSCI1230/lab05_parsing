@@ -27,7 +27,7 @@ enum class PrimitiveType {
 
 // Enumeration for types of transformations that can be applied to objects, lights, and cameras.
 enum TransformationType {
-   TRANSFORMATION_TRANSLATE, TRANSFORMATION_SCALE, TRANSFORMATION_ROTATE, TRANSFORMATION_MATRIX
+    TRANSFORMATION_TRANSLATE, TRANSFORMATION_SCALE, TRANSFORMATION_ROTATE, TRANSFORMATION_MATRIX
 };
 
 template <typename Enumeration>
@@ -38,81 +38,81 @@ auto as_integer(Enumeration const value)
 }
 
 // Struct to store a RGBA color in floats [0,1]
-using CS123SceneColor = glm::vec4;
+using SceneColor = glm::vec4;
 
 // Scene global color coefficients
-struct CS123SceneGlobalData  {
-   float ka;  // global ambient coefficient
-   float kd;  // global diffuse coefficient
-   float ks;  // global specular coefficient
-   float kt;  // global transparency coefficient
+struct SceneGlobalData  {
+    float ka;  // global ambient coefficient
+    float kd;  // global diffuse coefficient
+    float ks;  // global specular coefficient
+    float kt;  // global transparency coefficient
 };
 
 // Data for a single light
-struct CS123SceneLightData {
-   int id;
-   LightType type;
+struct SceneLightData {
+    int id;
+    LightType type;
 
-   CS123SceneColor color;
-   glm::vec3 function;  // Attenuation function
+    SceneColor color;
+    glm::vec3 function;  // Attenuation function
 
-   glm::vec4 pos;       // Not applicable to directional lights
-   glm::vec4 dir;       // Not applicable to point lights
+    glm::vec4 pos;       // Not applicable to directional lights
+    glm::vec4 dir;       // Not applicable to point lights
 
-   float radius;        // Only applicable to spot lights
-   float penumbra;      // Only applicable to spot lights
-   float angle;         // Only applicable to spot lights
+    float radius;        // Only applicable to spot lights
+    float penumbra;      // Only applicable to spot lights
+    float angle;         // Only applicable to spot lights
 
-   float width, height; // Only applicable to area lights
+    float width, height; // Only applicable to area lights
 };
 
 // Data for scene camera
-struct CS123SceneCameraData {
-   glm::vec4 pos;
-   glm::vec4 look;
-   glm::vec4 up;
+struct SceneCameraData {
+    glm::vec4 pos;
+    glm::vec4 look;
+    glm::vec4 up;
 
-   float heightAngle;
-   float aspectRatio;
+    float heightAngle;
+    float aspectRatio;
 
-   float aperture;      // Only applicable for depth of field
-   float focalLength;   // Only applicable for depth of field
+    float aperture;      // Only applicable for depth of field
+    float focalLength;   // Only applicable for depth of field
 };
 
 // Data for file maps (ie: texture maps)
-struct CS123SceneFileMap {
-//    CS123SceneFileMap() : texid(0) {}
-   bool isUsed;
-   std::string filename;
-   float repeatU;
-   float repeatV;
+struct SceneFileMap {
+    SceneFileMap() : isUsed(false) {}
 
-   void clear() {
+    bool isUsed;
+    std::string filename;
+
+    float repeatU;
+    float repeatV;
+
+    void clear() {
        isUsed = false;
        repeatU = 0.0f;
        repeatV = 0.0f;
        filename = std::string();
-   }
+    }
 };
 
 // Data for scene materials
-struct CS123SceneMaterial {
+struct SceneMaterial {
    // This field specifies the diffuse color of the object. This is the color you need to use for
    // the object in sceneview. You can get away with ignoring the other color values until
    // intersect and ray.
-//   CS123SceneMaterial() {}
-   CS123SceneColor cDiffuse;
-   
-   CS123SceneColor cAmbient;
-   CS123SceneColor cReflective;
-   CS123SceneColor cSpecular;
-   CS123SceneColor cTransparent;
-   CS123SceneColor cEmissive;
+   SceneColor cDiffuse;
+   SceneColor cAmbient;
+   SceneColor cReflective;
+   SceneColor cSpecular;
+   SceneColor cTransparent;
+   SceneColor cEmissive;
 
-   CS123SceneFileMap textureMap;
+   SceneFileMap textureMap;
    float blend;
 
-   CS123SceneFileMap bumpMap;
+   SceneFileMap bumpMap;
 
    float shininess;
 
@@ -133,34 +133,37 @@ struct CS123SceneMaterial {
    }
 };
 
-struct CS123ScenePrimitive {
+struct ScenePrimitive {
    PrimitiveType type;
    std::string meshfile;     // Only applicable to meshes
-   CS123SceneMaterial material;
+   SceneMaterial material;
 };
 
 // Data for transforming a scene object. Aside from the TransformationType, the remaining of the
 // data in the struct is mutually exclusive.
-struct CS123SceneTransformation {
+struct SceneTransformation {
     TransformationType type;
 
-    glm::vec3 translate; // The translation vector. Only valid if transformation is a translation.
-    glm::vec3 scale;     // The scale vector. Only valid if transformation is a scale.
-    glm::vec3 rotate;    // The axis of rotation. Only valid if the transformation is a rotation.
-    float angle;         // The rotation angle in RADIANS. Only valid if transformation is a
-                         // rotation.
-
-    glm::mat4x4 matrix;  // The matrix for the transformation. Only valid if the transformation is
-                         // a custom matrix.
+    // The translation vector. Only valid if transformation is a translation.
+    glm::vec3 translate;
+    // The scale vector. Only valid if transformation is a scale.
+    glm::vec3 scale;
+    // The axis of rotation. Only valid if the transformation is a rotation.
+    glm::vec3 rotate;
+    // The rotation angle in RADIANS. Only valid if transformation is a rotation.
+    float angle;
+    // The matrix for the transformation.
+    // Only valid if the transformation is a custom matrix.
+    glm::mat4x4 matrix;
 };
 
 // Structure for non-primitive scene objects
-struct CS123SceneNode {
-   std::vector<CS123SceneTransformation*> transformations;
+struct SceneNode {
+   std::vector<SceneTransformation*> transformations;
 
-   std::vector<CS123ScenePrimitive*> primitives;
+   std::vector<ScenePrimitive*> primitives;
 
-   std::vector<CS123SceneNode*> children;
+   std::vector<SceneNode*> children;
 };
 
 #endif
